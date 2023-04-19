@@ -1,0 +1,18 @@
+# create package
+cd C:\Users\derk-jan.woltjer\PycharmProjects\webslides
+python setup.py sdist
+
+
+
+REM install package
+cd c:\Python310\Scripts
+pip install C:\Users\derk-jan.woltjer\PycharmProjects\webslides\dist\webslides-0.6.0.tar.gz
+cd c:\Python310\Lib\site-packages\webslides
+
+
+
+# upload to PyPI
+cd C:\Users\derk-jan.woltjer\PycharmProjects\webslides
+twine upload dist/*
+
+

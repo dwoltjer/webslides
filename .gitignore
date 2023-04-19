@@ -1,0 +1,10 @@
+.idea/
+dist/
+webslides.egg-info/
+*.html
+test.py
+todo.txt
+**/*.html
+**/*.aspx
+**/*.zip
+**/*.gpkg
