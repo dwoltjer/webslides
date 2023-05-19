@@ -25,6 +25,9 @@ def hello_world_html():
     html_lines = [
         '<div style="font-size:1.1em;padding:15px;background-color:#fdffc7; display: inline-block;"><pre><code>']
     for line in code_lines:
+        line = line.replace('import sys', '')
+        line = line.replace('import os', '')
+        line = line.replace("sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))", "")
         line = line.replace('import main as ws', 'import webslides as ws')
         html_line = line.rstrip().replace('<', '&lt;').replace('>', '&gt;')
         html_lines.append(html_line)

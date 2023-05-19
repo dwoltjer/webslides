@@ -33,17 +33,20 @@ def validate_content(content):
             return f"Error: '{topcat}' subdictionary must have at least 1 key-value pair."
 
         for subcat, items in subcats.items():
-            if not isinstance(items, list):
-                return f"Error: '{subcat}' value is not a list. Content: {str(items)[:13]}...{str(items)[-14:]}"
 
-            if len(items) < 1:
-                return f"Error: '{subcat}' list must have at least 1 element."
+            if not isinstance(items, dict):
+                return f"Error: '{subcat}' value is not a dict. Content: {str(items)[:13]}...{str(items)[-14:]}"
 
-            for item in items:
-                if not isinstance(item, dict):
-                    return f"Error: List element is not a dictionary. Content: {str(item)[:13]}...{str(item)[-14:]}"
+            if len(items) == 0:
+                return f"Error: '{subcat}' dict must have at least 1 element."
 
-                for key, value in item.items():
+            for ik, iv in items.items():
+
+                if not isinstance(iv, dict):
+                    return f"Error: Page content is not a dictionary. Content: {str(iv)[:13]}...{str(iv)[-14:]}"
+
+                for key, value in iv.items():
+                    
                     if key == 'title' and not isinstance(value, str):
                         return f"Error: 'title' value is not a string. Content: {str(value)[:13]}...{str(value)[-14:]}"
                     elif key in ['highlights', 'footer'] and not (

@@ -10,13 +10,15 @@ from webslides.modules.input_validations import *
 
 def create(content=None
            , title_page=None
-           , fname='output.html'
+           , fname=None
            , open_in_browser=True
+           , show_title_page=True
            , show_index_page=False
            , show_highlights_page=False
            , show_topcat=True
            , show_subcat=True
-           , show_highlights_only=False):
+           , show_highlights_only=False
+           , tooltips=dict()):
     """
     param pd (pagedata): list of lists with html strings or plotly fig objects ie.
         [[titlepage],[hl_page_title,hl_page_content],
@@ -58,7 +60,7 @@ def create(content=None
     <style>
     .page {padding:50px; margin:100px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}
     body {font-family: "Arial";} a {text-decoration: none;}
-    </style>
+    </style>    
     </head>
     <body>
     <span></span>
@@ -67,7 +69,7 @@ def create(content=None
     """
 
     # 1. title page
-    if title_page:
+    if title_page and show_title_page:
         page = {'title': title_page.get('title', ''),
                 'img_url': title_page.get('img_url', ''),
                 'summary': title_page.get('summary', ''),
@@ -87,7 +89,7 @@ def create(content=None
         # start new page
         html = html.replace('<span></span>', '<div class="page"><span></span></div>')
 
-        indexpage_html = generate_index_page(df, show_topcat=show_topcat, show_subcat=show_subcat)
+        indexpage_html = generate_index_page(df, show_topcat=show_topcat, show_subcat=show_subcat, tooltips=tooltips)
         html = html.replace('<span></span>', indexpage_html + '<span></span>')
 
         # close page
@@ -98,7 +100,7 @@ def create(content=None
         # start new page
         html = html.replace('<span></span>', '<div class="page"><span></span></div>')
 
-        hlpage_html = generate_highlights_page(df, show_topcat=show_topcat, show_subcat=show_subcat)
+        hlpage_html = generate_highlights_page(df, show_topcat=show_topcat, show_subcat=show_subcat, tooltips=tooltips)
         html = html.replace('<span></span>', hlpage_html + '<span></span>')
 
         # close page
@@ -115,7 +117,8 @@ def create(content=None
                                show_subcat=show_subcat,
                                show_index_page=show_index_page,
                                show_highlights_page=show_highlights_page,
-                               show_navi=True)
+                               show_navi=True,
+                               tooltips=tooltips)
 
         # close page
         html = html.replace('<span></span></div>', '</div><span></span>')
@@ -124,23 +127,41 @@ def create(content=None
     ## HANDLE OUTPUT ##
     ###################
 
-    # create output directory 'wsout' if not present
+    # default output = wsout/output.html
+    if not fname or fname == '':
+        fname = 'output.html'
     current_working_dir = os.getcwd()
-    fpath = os.path.join(current_working_dir, 'wsout')
+    fpath = os.path.join(current_working_dir, 'wsout', fname)
+    wsoutpath = os.path.join(current_working_dir, 'wsout')
 
-    if not os.path.exists(fpath):
-        os.makedirs(fpath)
+    # test if fname contains filename (with extension) or just base
+    base, ext = os.path.splitext(fname)
 
-    with codecs.open(f"{fpath}/{fname}", "w", encoding='utf-8') as f:
+    # fname contains a filename
+    if ext:
+        if os.path.exists(fname) or os.path.exists(base):
+            fpath = fname
+
+    # fname only contains directory name
+    else:
+        if os.path.isdir(fname):
+            fpath = os.path.join(fname, 'output.html')
+        else:
+            fpath = os.path.join(current_working_dir, 'wsout', 'output.html')
+
+    # create output directory 'wsout' if not present
+    if 'wsout' in fpath and not os.path.exists(wsoutpath):
+        os.makedirs(wsoutpath)
+
+    with codecs.open(f"{fpath}", "w", encoding='utf-8') as f:
         f.write(html)
-        print(f'output saved as wsout/{fname}')
+        print(f'output saved as {fpath}')
 
 
+    # open in browser to check result
     if open_in_browser:
-        # open in browser to check result
-        htmlfile = f"{fpath}/{fname}"
-        webbrowser.open(htmlfile)
-        print(f'opened in browser wsout/{fname}')
+        webbrowser.open(fpath)
+        print(f'opened in browser {fpath}')
 
     return None
 

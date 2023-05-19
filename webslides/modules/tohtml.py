@@ -66,8 +66,11 @@ def titlepage_to_html(html, page):
     return html
 
 
-def content_to_html(html, page, show_topcat, show_subcat, show_index_page=False, show_highlights_page=False,
-                    show_navi=False):
+def content_to_html(html, page, show_topcat, show_subcat,
+                    show_index_page=False,
+                    show_highlights_page=False,
+                    show_navi=False,
+                    tooltips=None):
     # A. page navigation
     if show_navi:  # dont show for title page
         pagenavi = pagenavi_to_html(pageno=page['pageno'],
@@ -80,11 +83,14 @@ def content_to_html(html, page, show_topcat, show_subcat, show_index_page=False,
 
     # B. page title
     if 'title' in page and page['title'] != '':
-        title = title_to_html(page['topcat'], page['subcat'], page['title'], show_topcat, show_subcat)
+        title = title_to_html(pageid=page['pageid'],
+                              topcat=page['topcat'], subcat=page['subcat'],
+                              title=page['title'], show_topcat=show_topcat,
+                              show_subcat=show_subcat, tooltips=tooltips)
         html = html.replace('<span></span>', title + '<span></span>')
 
     # C. highlights
-    if 'highlights' in page and page['highlights'] != '':
+    if 'highlights' in page and page['highlights'] != '' and page['highlights'] != []:
         highlights_html = highlights_to_html(page['highlights'])
         html = html.replace('<span></span>', highlights_html + '<span></span>')
 
@@ -94,7 +100,7 @@ def content_to_html(html, page, show_topcat, show_subcat, show_index_page=False,
         html = html.replace('<span></span>', body_html + '<span></span>')
 
     # E. footer
-    if 'footer' in page and page['footer'] != '':
+    if 'footer' in page and page['footer'] != '' and page['footer'] != []:
         footer_html = footer_to_html(page['footer'])
         html = html.replace('<span></span>', footer_html + '<span></span>')
 
@@ -128,15 +134,22 @@ def pagenavi_to_html(pageno, show_index_page, show_highlights_page, pagekey, pre
     return pagenavi_html
 
 
-def title_to_html(topcat='', subcat='', title='', show_topcat=True, show_subcat=True):
+def title_to_html(pageid='', topcat='', subcat='', title='', show_topcat=True, show_subcat=True, tooltips=dict()):
     """
     :param title: str title of html page
     :return: string html formatted title
     """
-    topcat = f"<span style='color: white; background-color: #008AC9; padding:5px;'>{topcat.upper()}</span> " if len(
+
+    pageid = title if pageid == '' else pageid
+    tooltips_topcat = tooltips.get('topcats', dict())
+    tooltips_subcat = tooltips.get('subcats', dict())
+    tooltip_topcat = tooltips_topcat.get(topcat, topcat)
+    tooltip_subcat = tooltips_subcat.get(subcat, subcat)
+
+    topcat = f"<span style='color: white; background-color: #008AC9; padding:5px;' title='{tooltip_topcat}'>{topcat.upper()}</span> " if len(
         topcat) > 0 else ''
-    subcat = f"<span style='font-weight: normal;'>{subcat}</span>: " if len(subcat) > 0 else ''
-    return f"<h3 style='line-height: 2;'>{show_topcat * topcat}{show_subcat * subcat}{title}</h3>"
+    subcat = f"<span style='font-weight: normal;' title='{tooltip_subcat}'>{subcat}</span>: " if len(subcat) > 0 else ''
+    return f"<h3 class='pagetitle' style='line-height: 2;'>{show_topcat * topcat}{show_subcat * subcat}<span title='{pageid}'>{title}</span></h3>"
 
 
 def highlights_to_html(highlights):

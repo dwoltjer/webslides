@@ -25,7 +25,8 @@ Let's be honest, potential drawbacks may be:
 - Python is required to create presentations
 - Recipients cannot easily alter the presentation
 - No WYSIWYG editing in a graphical user interface
-- No easy conversion to PDF
+- No easy conversion to PDF / printable
+- No custom styling (ie. company style)
 
 ## Main Features
 
@@ -44,7 +45,7 @@ Webslides has two dependencies:
 - Plotly: an interactive data visualization library that allows you to create a wide range of charts, graphs, and other visualizations
 
 Webslides uses Pandas to process the content that is included in your presentation.
-The Plotly package is used to convert Plotly figure opjects to HTML.
+The Plotly package is used to convert Plotly figure objects to HTML.
 
 ## Installation
 
@@ -79,13 +80,14 @@ title_page = {
 # content
 content = {
     'Topcat A': {
-        'Subcat X': [
-            { 'title': 'Page title 1!',
+        'Subcat X': {
+            'page1': {
+                'title': 'Page title 1!',
                 'highlights': ['- highlight 1', '- highlight 2'],
                 'body': 'Content 1: this is a <b>HTML string</b>',
                 'footer': ['- footer 3', '- <i>italic footer 4</i>']
             }
-        ]
+        }
      }
  }
 
@@ -126,15 +128,15 @@ Example input:
 ```
 content = {
     'Topcat A': {
-        'Subcat X': [
-            {
+        'Subcat X': {
+            'page1': {
                 'title': 'Page Title 1 - HTML body',
                 'highlights': ['- highlight 1', '- highlight 2'],
                 'body': 'Content 1: this is a <b>HTML string</b>',
                 'footer': ['- footer 1a', '- <i>italic footer 1b</i>'],
                 'show': True},
                 ...
-            ],
+            },
         ...
         },
     ...
@@ -153,6 +155,8 @@ content = {
 - **show_subcat** (bool, _optional_, default=True): If set to True, the subcategory will be displayed in the index and highlights pages.
 
 - **show_highlights_only** (bool, _optional_, default=False): If set to True, only content pages with highlights will be shown in the index and highlights pages.
+
+- **tooltips** (dict, _optional_, default=None): Dictionary with keys 'topcats' and 'subcats' and with topcat/subcat as keys, with each a dict wit keys and values with the respective topcat names and tooltip texts.
 
 ## Page Dictionary Parameters
 

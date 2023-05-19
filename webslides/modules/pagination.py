@@ -9,11 +9,12 @@ def pagination_data(content, show_highlights_only):
 
     data = list()
     for topcat, subcats in content.items():
-        for subcat, items in subcats.items():
-            for item in items:
-                item_copy = item.copy()
+        for subcat, pages in subcats.items():
+            for kp, vp in pages.items():
+                item_copy = vp.copy()
                 item_copy['topcat'] = topcat
                 item_copy['subcat'] = subcat
+                item_copy['pageid'] = kp
 
                 # Check for the presence of 'footer' and 'highlights' keys
                 if 'footer' not in item_copy:
