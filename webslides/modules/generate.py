@@ -1,11 +1,12 @@
-def generate_index_page(df, show_topcat, show_subcat, tooltips):
+def generate_index_page(df, show_topcat, show_subcat, tooltips, contents_title):
     """
     :param df: dataframe with page meta data
     :return: list with index page content (list of html strings)
     """
 
     # initð
-    index_page_title = f"<h3 id='id_contents'>Contents</h3>"
+    contents_title = 'Contents' if not contents_title else contents_title
+    index_page_title = f"<h3 id='id_contents'>{contents_title}</h3>"
     index_page_content = '<table style="line-height: 1.6;"><tr><td style="padding:20px; vertical-align: top;">'
     tooltips_topcat = tooltips.get('topcats', None)
     tooltips_subcat = tooltips.get('subcats', None)
@@ -28,7 +29,7 @@ def generate_index_page(df, show_topcat, show_subcat, tooltips):
                 tooltip = tooltips_topcat.get(r['topcat'], '') if tooltips_topcat else r['topcat']
                 index_page_content += f"{'<br>' if i > 0 else ''}<span title='{tooltip}' style='color: white; background-color: #008AC9; padding:5px;'>{r['topcat'].upper()}</span><br><br>"
 
-        # ivoegen sub category label
+        # invoegen sub category label
         if 'subcat' in df.columns and show_subcat:
             if r['subcat'] != r['next_scat']:
                 tooltip = tooltips_subcat.get(r['subcat'], '') if tooltips_subcat else r['subcat']
@@ -83,18 +84,18 @@ def generate_highlights_page(df, show_topcat, show_subcat, tooltips):
         if 'topcat' in df.columns and show_topcat and topcat_has_hl:
             if r['topcat'] != r['next_tcat']:
                 tooltip = tooltips_topcat.get(r['topcat'], '') if tooltips_topcat else r['topcat']
-                hl_page_content += f"<br><span title='{tooltip}' style='color: white; background-color: #008AC9; padding:5px;'>{r['topcat'].upper()}</span><br><br>"
+                hl_page_content += f'<br><span class="topcat" title="{tooltip}" style="color: white; background-color: #008AC9; padding:5px;">{r["topcat"].upper()}</span><br><br>'
 
         # invoegen sub category label
         if 'subcat' in df.columns and show_subcat and subcat_has_hl:
             if r['subcat'] != r['next_scat']:
                 tooltip = tooltips_subcat.get(r['subcat'], '') if tooltips_subcat else r['subcat']
-                hl_page_content += f"<b><span title='{tooltip}'>{r['subcat']}</span></b><br>"
+                hl_page_content += f'<b><span class="subcat" title="{tooltip}">{r["subcat"]}</span></b><br>'
 
         # show comments for highlighted titles
         if r['highlights']:
             for comment in r['highlights']:
-                hl_page_content += f"&nbsp;&nbsp;&nbsp;&nbsp;&#8226;&nbsp;<a href='#{r['pagekey']}'>{r['title']}</a>: {comment}<br>"
+                hl_page_content += f'&nbsp;&nbsp;&nbsp;&nbsp;&#8226;&nbsp;<a href="#{r["pagekey"]}">{r["title"]}</a>: {comment}<br>'
 
     hl_page_content += '</span>'
 

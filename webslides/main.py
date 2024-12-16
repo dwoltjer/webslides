@@ -1,12 +1,13 @@
 import os
-import sys
 import codecs
 import webbrowser
 
+from webslides.modules.other import *
 from webslides.modules.tohtml import *
 from webslides.modules.generate import *
 from webslides.modules.pagination import *
 from webslides.modules.input_validations import *
+
 
 def create(content=None
            , title_page=None
@@ -14,20 +15,83 @@ def create(content=None
            , open_in_browser=True
            , show_title_page=True
            , show_index_page=False
+           , show_topcat=False
+           , show_subcat=False
            , show_highlights_page=False
-           , show_topcat=True
-           , show_subcat=True
            , show_highlights_only=False
+           , contents_title=None
+           , custom_css=None
+           , footer_image_url=None
            , tooltips=dict()):
     """
-    param pd (pagedata): list of lists with html strings or plotly fig objects ie.
-        [[titlepage],[hl_page_title,hl_page_content],
-        [index_page_title,index_page_content],
-        [content_page1_title,content_page1_comments,content_page1_fig],
-        [content_page2_title,content_page2_comments,content_page2_fig]]
-    param fname: str filename for output file. If not provided defaults to 'output.html')
-    param write: bool, False will only output to screen, True will write file AND output to screen
-    return: str html code
+    Create an interactive presentation using the WebSlides framework.
+
+    Parameters:
+    -----------
+    content : dict of dicts, mandatory
+        page contents, organised in topcats, subcats and pages. Example structure:
+
+        content = {
+            'Topcat A': {
+                'Subcat X': {
+                    'page1': {
+                        'title': 'Page Title 1 - HTML body',
+                        'highlights': ['- highlight 1', '- highlight 2'],
+                        'body': 'Content 1: this is a <b>HTML string</b>',
+                        'footer': ['- footer 1a', '- <i>italic footer 1b</i>'],
+                        'show': True},
+                        ...
+                    },
+                ...
+                },
+            ...
+        }
+
+    title_page : str, optional
+        Custom content for the title page. If None, defaults to a standard title page.
+
+    fname : str, optional
+        The filename for the output HTML file. Defaults to 'output.html' if not specified.
+
+    open_in_browser : bool, optional
+        Whether to automatically open the generated HTML in a browser. Defaults to True.
+
+    show_title_page : bool, optional
+        Whether to include a title page. Defaults to True.
+
+    show_index_page : bool, optional
+        Whether to include an index page. Defaults to False.
+
+    show_topcat : bool, optional
+        Whether to display top categories on the index page. Defaults to True.
+
+    show_subcat : bool, optional
+        Whether to display subcategories on the index page. Defaults to True.
+
+    show_highlights_page : bool, optional
+        Whether to include a highlights page. Defaults to False.
+
+    show_highlights_only : bool, optional
+        If True, display only the highlights page and exclude other content. Defaults to False.
+
+    footer_image_url : str, optional
+        Filename or web url of image to be used for image in footer
+
+    contents_title : str, optional
+        Heading of the contents page, default = 'Contents'
+
+    tooltips : dict, optional
+        A dictionary of tooltips to enhance interactivity in the slides. Keys are element identifiers, and values are tooltip text.
+
+    Returns:
+    --------
+    str
+        The HTML code for the presentation.
+
+    Notes:
+    ------
+    - Requires the WebSlides framework to be properly configured in your environment.
+    - Ensure that any Plotly figure objects included in the content are properly serialized.
     """
 
     # INPUT VALIDATIONS
@@ -58,8 +122,13 @@ def create(content=None
     <head><meta charset="utf-8" />
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-    .page {padding:50px; margin:100px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}
-    body {font-family: "Arial";} a {text-decoration: none;}
+    .page 
+        {padding:50px; margin:100px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; background-color: white; border-radius:5px;}
+    body 
+        {font-family: Verdana, Geneva, Arial, sans-serif; background-color: #EEE;}
+    a 
+        {text-decoration: none;}
+
     </style>    
     </head>
     <body>
@@ -68,17 +137,22 @@ def create(content=None
     </html>
     """
 
+    # get image source code from url
+    title_image_src = retrieve_image_src(title_page.get('title_image_url'))
+    footer_image_src = retrieve_image_src(footer_image_url)
+
     # 1. title page
     if title_page and show_title_page:
         page = {'title': title_page.get('title', ''),
-                'img_url': title_page.get('img_url', ''),
+                'title_image_src': title_image_src,
+                'footer_image_src': footer_image_src,
                 'summary': title_page.get('summary', ''),
                 'footer': title_page.get('footer', list())}
 
         # start new page
         html = html.replace('<span></span>', '<div class="page"><span></span></div>')
 
-        # reuse contenpage_to_html function (normally used for contenslides)
+        # reuse contenpage_to_html function (normally used for content slides)
         html = titlepage_to_html(html, page)
 
         # close page
@@ -88,8 +162,9 @@ def create(content=None
     if show_index_page:
         # start new page
         html = html.replace('<span></span>', '<div class="page"><span></span></div>')
-
-        indexpage_html = generate_index_page(df, show_topcat=show_topcat, show_subcat=show_subcat, tooltips=tooltips)
+        indexpage_html = generate_index_page(df, show_topcat=show_topcat,
+                                             show_subcat=show_subcat, tooltips=tooltips,
+                                             contents_title=contents_title)
         html = html.replace('<span></span>', indexpage_html + '<span></span>')
 
         # close page
@@ -117,11 +192,21 @@ def create(content=None
                                show_subcat=show_subcat,
                                show_index_page=show_index_page,
                                show_highlights_page=show_highlights_page,
+                               footer_image_src=footer_image_src,
                                show_navi=True,
                                tooltips=tooltips)
 
         # close page
         html = html.replace('<span></span></div>', '</div><span></span>')
+
+    # 5. custom css
+    if custom_css:
+        # Style tag with custom css
+        style_tag = f"<style>{custom_css}</style>"
+
+        # instert style tag before closing </head> tag
+        html = html.replace("</head>", f"{style_tag}\n</head>")
+
 
     ###################
     ## HANDLE OUTPUT ##
@@ -155,13 +240,12 @@ def create(content=None
 
     with codecs.open(f"{fpath}", "w", encoding='utf-8') as f:
         f.write(html)
-        print(f'output saved as {fpath}')
+        print(f'INFO: output saved as {fpath}')
 
 
     # open in browser to check result
     if open_in_browser:
         webbrowser.open(fpath)
-        print(f'opened in browser {fpath}')
+        print(f'INFO: opened in browser {fpath}')
 
     return None
-

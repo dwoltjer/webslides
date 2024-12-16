@@ -6,7 +6,7 @@ def validate_title_page(title_page):
         return "The title page must be a dictionary"
     elif 'title' not in title_page or not isinstance(title_page['title'], str):
         return "The title page must contain a 'title' key with a string value"
-    elif 'img_url' in title_page and not isinstance(title_page['img_url'], str):
+    elif 'title_image_url' in title_page and not isinstance(title_page['title_image_url'], str):
         return "The image url, if provided, must be string value"
     elif 'summary' in title_page and not isinstance(title_page['summary'], dict):
         return "The summary, if provided, must be dictionary"

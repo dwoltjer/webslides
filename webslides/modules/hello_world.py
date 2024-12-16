@@ -1,23 +1,11 @@
 # imports
 import sys
 import os
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import main as ws
 import plotly.graph_objects as go
 
-# title page
-title_page = {
-    'img_url': '',
-    'title': 'Title of Title Page',
-    'summary': {'Summary item 1': 'item text 1', 'Summary item 2': 'item text 2'},
-    'footer': ['- use custom title image via the img_url parameter', '- footer2']
-}
-
-# tooltips (optional!)
-tooltips = {'topcats': {'Topcat A': 'Put your own tooltip text here',
-                        'Topcat B': 'Put your own tooltip text here'},
-            'subcats': {'Subcat X': 'Tooltip text for subcat x here',
-                        'Subcat Y': 'Tooltip text for subcat y yere'}}
 
 # simple plotly fig
 def simple_fig():
@@ -29,9 +17,23 @@ def simple_fig():
     fig = go.Figure()
     fig.add_trace(trace1)
     fig.add_trace(trace2)
-    fig.update_layout(title='Simple Plotly Line Figure with Two Lines')
+    fig.update_layout(title='Simple Plotly Line Figure with Two Lines', height=600)
     return fig
 
+
+# title page
+title_page = {
+    'title': 'Hello World!<br>Title of Title Page',
+    'title_image_url': 'https://datadept.nl/webslides/package.png',
+    'summary': {'Summary item 1': 'This presentation demonstrates some of the features of webslides and could be used as a starting point for a new presentation', 'Summary item 2': 'item text 2'},
+    'footer': ['- use custom title image via the title_image_url parameter', '- footer2']
+}
+
+# tooltips (optional!)
+tooltips = {'topcats': {'Topcat A': 'Put your own tooltip text here',
+                        'Topcat B': 'Put your own tooltip text here'},
+            'subcats': {'Subcat X': 'Tooltip text for subcat x here',
+                        'Subcat Y': 'Tooltip text for subcat y yere'}}
 
 # content pages
 content = {
@@ -71,14 +73,19 @@ content = {
     }
 }
 
+custom_css = "body {font-family: Arial, sans-serif; background-color: #FFF} .page {border-radius:0px;} .footer_image {width:200px;}"
+
 # MAIN
 ws.create(content=content
           , title_page=title_page
-          , fname='webslides_hello_world.html'
+          , fname='hello_world.html'
           , open_in_browser=True
           , show_index_page=True
           , show_topcat=True
           , show_subcat=True
-          , show_highlights_page=True
+          , show_highlights_page=False
           , show_highlights_only=False
+          , contents_title='Inhoudsopgave'
+          , footer_image_url='https://datadept.nl/img/datadept_logo_black.png'
+          , custom_css=custom_css
           , tooltips=tooltips)

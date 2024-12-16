@@ -3,32 +3,29 @@ import plotly.offline as po
 
 
 def titlepage_to_html(html, page):
-    # check if image is provided, otherwise swap for Webslides logo HTML
-    if ('img_url' in page) and len(page['img_url']) > 0:
 
-        # image url was provided
-        VAR_IMAGE_HTML = "<img src='" + page['img_url'] + "' style='width:200px;margin:10px;'>"
-
+    # Generate the HTML
+    title_imgage_src = page['title_image_src']
+    if title_imgage_src:
+        VAR_TITLE_IMAGE_HTML = f"<img id='title_page_image' src='{title_imgage_src}' style='width:300px; margin:50px 25px 25px 25px;'>"
     else:
-
-        # no image url provided
-        VAR_IMAGE_HTML = ws_logo_html()
+        VAR_TITLE_IMAGE_HTML = ws_logo_html()
 
     # init
     titlepage = """<style>
-    .container {position: relative; height: 600px;}
-    .centered-element {text-align: center; margin: 0; width:80%; position: absolute; top: 50%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);}
+    .container {position: relative; height: 700px;}
+    .centered-element {text-align: center; margin: 20px; width:80%; position: absolute; top: 50%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);}
     </style>
     <div class='container'>
         <div class='centered-element'>
-            VAR_IMAGE_HTML
+            VAR_TITLE_IMAGE_HTML
             <h1>VAR_TITLE</h1><br>
             <p style='line-height: 1.5;'>
             VAR_SUMMARY</p>
         </div>
     </div>"""
 
-    titlepage = titlepage.replace('VAR_IMAGE_HTML', VAR_IMAGE_HTML)
+    titlepage = titlepage.replace('VAR_TITLE_IMAGE_HTML', VAR_TITLE_IMAGE_HTML)
     titlepage = titlepage.replace('VAR_TITLE', page['title'])
 
     # generate summary html
@@ -38,7 +35,7 @@ def titlepage_to_html(html, page):
                 <col style="width: 20%;">
                 <col style="width: 80%;">
             </colgroup>
-            <tbody>"""
+            <tbody style=" line-height:1.5em;">"""
 
     for k, v in page['summary'].items():
         summary_html += f"""
@@ -57,10 +54,10 @@ def titlepage_to_html(html, page):
     html = html.replace('<span></span>', titlepage + '<span></span>')
 
     # footer
-    if 'footer' in page:
+    if 'footer' in page or 'footer_image_url' in page:
         footer = page['footer']
         footer.append(f"{dt.datetime.now().strftime('%e %b. %Y')}")
-        footer_html = footer_to_html(page['footer'])
+        footer_html = footer_to_html(page['footer'], footer_image_src=page['footer_image_src'])
         html = html.replace('<span></span>', footer_html + '<span></span>')
 
     return html
@@ -69,12 +66,14 @@ def titlepage_to_html(html, page):
 def content_to_html(html, page, show_topcat, show_subcat,
                     show_index_page=False,
                     show_highlights_page=False,
+                    footer_image_src=None,
                     show_navi=False,
                     tooltips=None):
     # A. page navigation
     if show_navi:  # dont show for title page
         pagenavi = pagenavi_to_html(pageno=page['pageno'],
                                     pagekey=page['pagekey'],
+                                    pageid=page['pageid'],
                                     show_index_page=show_index_page,
                                     show_highlights_page=show_highlights_page,
                                     prev_highlight_key=page.get('hl_prev_key', None),
@@ -100,14 +99,15 @@ def content_to_html(html, page, show_topcat, show_subcat,
         html = html.replace('<span></span>', body_html + '<span></span>')
 
     # E. footer
-    if 'footer' in page and page['footer'] != '' and page['footer'] != []:
-        footer_html = footer_to_html(page['footer'])
+    if ('footer' in page and page['footer'] != '' and page['footer'] != []) or footer_image_src:
+        footer_html = footer_to_html(page['footer'], footer_image_src)
         html = html.replace('<span></span>', footer_html + '<span></span>')
 
     return html
 
 
-def pagenavi_to_html(pageno, show_index_page, show_highlights_page, pagekey, prev_highlight_key, next_highlight_key):
+def pagenavi_to_html(pageno, show_index_page, pageid, show_highlights_page, pagekey,
+                     prev_highlight_key, next_highlight_key):
     """
     :param pageno: int pagenumber
     :param name: str name of the html page (id used to navigate to this page, ie. from index page)
@@ -129,7 +129,7 @@ def pagenavi_to_html(pageno, show_index_page, show_highlights_page, pagekey, pre
     pagenavi_index_page = f'<a id="{pagekey}" title="Table of contents" href="#id_contents">&#128196;</a> ' * show_index_page
     pagenavi_highlights_page = f'{link_prev} <a title="Highlights summary" href="#highlights">&#128161;</a> {link_next} ' * show_highlights_page
 
-    pagenavi_html = f'<div class="footer" style="width: 100%; margin: 0 auto; text-align:right;">{pagenavi_highlights_page}{pagenavi_index_page}p{pageno}</div>'
+    pagenavi_html = f'<div class="page_nav" style="width: 100%; margin: 0 auto; text-align:right;" title="{pageid}">{pagenavi_highlights_page}{pagenavi_index_page}p{pageno}</div>'
 
     return pagenavi_html
 
@@ -146,10 +146,11 @@ def title_to_html(pageid='', topcat='', subcat='', title='', show_topcat=True, s
     tooltip_topcat = tooltips_topcat.get(topcat, topcat)
     tooltip_subcat = tooltips_subcat.get(subcat, subcat)
 
-    topcat = f"<span style='color: white; background-color: #008AC9; padding:5px;' title='{tooltip_topcat}'>{topcat.upper()}</span> " if len(
+    topcat = f"<span class='topcat' style='color: white; background-color: #008AC9; padding:5px;' title='{tooltip_topcat}'>{topcat.upper()}</span> " if len(
         topcat) > 0 else ''
-    subcat = f"<span style='font-weight: normal;' title='{tooltip_subcat}'>{subcat}</span>: " if len(subcat) > 0 else ''
-    return f"<h3 class='pagetitle' style='line-height: 2;'>{show_topcat * topcat}{show_subcat * subcat}<span title='{pageid}'>{title}</span></h3>"
+    subcat = f"<span class='subcat' style='font-weight: normal;' title='{tooltip_subcat}'>{subcat}</span>: " if len(
+        subcat) > 0 else ''
+    return f"<h3 class='page_title' style='line-height: 2;'>{show_topcat * topcat}{show_subcat * subcat}<span title='{pageid}'>{title}</span></h3>"
 
 
 def highlights_to_html(highlights):
@@ -157,7 +158,7 @@ def highlights_to_html(highlights):
     :param comments: list with text to show in header
     :return: string html formatted header
     """
-    html = '<div style="background-color: #EBEBEB; line-height: 1.6; padding:10px;">'
+    html = '<div class=page_hhighlights" style="background-color: #EBEBEB; line-height: 1.6; padding:10px;">'
     for o in highlights: html += f"{o}<br>"
     html += "</div>"
     return html
@@ -167,29 +168,67 @@ def body_to_html(body):
     # insert html string
     if isinstance(body, str):
         # add some padding to the body content
-        return f"<div style='padding:3%'>{body}</div>"
+        return f'<div class="page_body" style="padding:3%">{body}</div>'
 
     # if not string, must be plotly fig object
     else:
-        return f"<div style='padding:3%'>{po.plot(body, include_plotlyjs=False, output_type='div')}</div>"
+        return f'<div class="page_body" style="padding:3%">{po.plot(body, include_plotlyjs=False, output_type="div")}</div>'
 
 
-def footer_to_html(footer):
+# def footer_to_html(footer):
+#     """
+#     :param footer: list with text to show in footer
+#     :return: string html formatted footer
+#     """
+#     html = '<div class="page_footer" style="background-color: #FFFFFF; line-height: 1.6; padding:10px;"><HR style="width:20%; margin-left:0;">'
+#     for o in footer: html += f"{o}<br>"
+#     html += "</div>"
+#     return html
+
+
+def footer_to_html(footer, footer_image_src=None):
     """
     :param footer: list with text to show in footer
+    :param image_url: URL of the image to display on the right
     :return: string html formatted footer
     """
-    html = '<div style="background-color: #FFFFFF; line-height: 1.6; padding:10px;"><HR style="width:20%; margin-left:0;">'
-    for o in footer: html += f"{o}<br>"
+
+    html = '''
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <!-- Footer content -->
+    <div class="page_footer" style="background-color: #FFFFFF; line-height: 1.6; padding:10px; width: calc(100% - 120px);">
+    '''
+
+    # horizontal line
+    if footer:
+        html += '''<hr style="width:20%; margin-left:0;">'''
+
+    for o in footer:
+        html += f"{o}<br>"
+
+    # close footer text div
     html += "</div>"
+
+    # image div
+    if footer_image_src:
+        html += f'''
+            <div>
+                <!-- Image on the far right -->
+                <img src="{footer_image_src}" class="footer_image" alt="footer_image" style="height: auto; max-height: 100px; margin-right: 10px;">
+            </div>
+        '''
+
+    # close footer div
+    html += "</div>"
+
     return html
 
 
 def ws_logo_html():
     return """
         <style>
-        .badge {
-            width: 210px;
+        .title_logo {
+            width: 400px;
             height: 130px;
             margin: 42px auto;
             background: linear-gradient(to bottom right, white, #006fff);
@@ -204,7 +243,7 @@ def ws_logo_html():
             color: #ededed;
         }
         </style>
-        <div class="badge">
-            <span>WS</span>
+        <div class="title_page_image">
+            <span>Webslides</span>
         </div>
     """

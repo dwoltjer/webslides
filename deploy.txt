@@ -6,7 +6,7 @@ python setup.py sdist
 
 REM install package -- CMD!
 cd c:\Python310\Scripts
-pip install C:\Users\derk-jan.woltjer\PycharmProjects\webslides\dist\webslides-0.6.4.tar.gz
+pip install C:\Users\derk-jan.woltjer\PycharmProjects\webslides\dist\webslides-0.7.0.tar.gz
 cd c:\Python310\Lib\site-packages\webslides
 
 

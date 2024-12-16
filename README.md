@@ -15,7 +15,7 @@ Some key advantages of using HTML over PowerPoint include:
 - Allows interactivity with plotly figures
 - Allows interactivity with other elements, such as folium geographical maps
 - Can be shared by attachment in email
-- Very compact file size (no images)
+- Very compact file size
 - **Easy to update by rerun of Python code**
 
 ## Potential drawbacks
@@ -65,16 +65,16 @@ ws.demo()
 ```
 
 ```
-## create most basic presentation with one slide, no title page, no index page
+## create most basic presentation with one slide, basic title page, no index page
 
 # imports
 import webslides as ws
 
 # title_page
 title_page = {
-    'img_url': '',
+    'title_image_url': 'mylogo.png',   # or insert url
     'title': 'One Page Presentation',
-    'summary': {'Context': 'Just some example to get started', 'Author': 'Me!'},
+    'summary': {'Context': 'Just some example to get started', 'Author': 'Me'},
 }
     
 # content
@@ -100,7 +100,8 @@ ws.create(content=content
           , show_topcat=False
           , show_subcat=False
           , show_highlights_page=False
-          , show_highlights_only=False)
+          , show_highlights_only=False
+          , custom_css='')
 ```
 
 ## `create` Function Documentation
@@ -109,15 +110,15 @@ The `create` function is used to generate an HTML file with a custom structure b
 
 ## Parameters
 
-- **title_page** (dict, _optional_, default=None): A dictionary containing the title page information. It should include an image URL (optional), a title, a summary, and a footer.
+- **title_page** (dict, _optional_, default=None): A dictionary containing the title page information. It should include an image filename or URL (optional), a title, a summary, and a footer.
 
 Example input:
 ```
     title_page = {
-        'img_url': '',
+        'title_image_url': 'myimage.png',
         'title': 'Title of Title Page',
         'summary': {'Summary item 1': 'item text 1', 'Summary item 2': 'item text 2'},
-        'footer': ['- use custom title image via the img_url parameter', '- footer2']
+        'footer': ['- use custom title image via the title_image_url parameter', '- footer2']
     }
 ```
 
@@ -142,7 +143,7 @@ content = {
     ...
 }
 ```
-- **fname** (str, _optional_, default='output.html'): The output filename for the generated HTML file.
+- **fname** (str, _optional_, default='output.html'): The output filename or path+filename for the generated HTML file. If path is not existent, a subfolder wsout will be created.
 
 - **open_in_browser** (bool, _optional_, default=True): If set to True, the generated HTML file will be opened in the default web browser.
 
@@ -150,13 +151,25 @@ content = {
 
 - **show_highlights_page** (bool, _optional_, default=False): If set to True, a highlights page will be displayed with a summary of the highlights from each content page.
 
-- **show_topcat** (bool, _optional_, default=True): If set to True, the top category will be displayed in the index and highlights pages.
+- **show_topcat** (bool, _optional_, default=False): If set to True, the top category will be displayed in the index and highlights pages.
 
-- **show_subcat** (bool, _optional_, default=True): If set to True, the subcategory will be displayed in the index and highlights pages.
+- **show_subcat** (bool, _optional_, default=False): If set to True, the subcategory will be displayed in the index and highlights pages.
 
 - **show_highlights_only** (bool, _optional_, default=False): If set to True, only content pages with highlights will be shown in the index and highlights pages.
 
+- **footer_image_url** (str, _optional_, default=None): Filename or web url of image to be used for logo in footer.
+
+- **contents_title** : (str, optional, default = 'Contents'): Heading of the contents page.
+
 - **tooltips** (dict, _optional_, default=None): Dictionary with keys 'topcats' and 'subcats' and with topcat/subcat as keys, with each a dict wit keys and values with the respective topcat names and tooltip texts.
+
+- **custom_css** (str, _optional_, default=None): String with custom CSS code to apply to output HTML. Can be used to adjust or overrule any styling, like logo size, background color etc.
+
+## Examples custom CSS
+- Change background color to white, font to Arial, remove rounded page corners:
+```
+custom_css = "body {font-family: Arial, sans-serif; background-color: #FFF} .page {border-radius:0px;}"
+```
 
 ## Page Dictionary Parameters
 

@@ -37,7 +37,7 @@ def demo_df_html():
         color = custom_blues(norm_val)
         return f'background-color: rgba({color[0] * 255:.0f}, {color[1] * 255:.0f}, {color[2] * 255:.0f}, 1)'
 
-    styled_df = styled_df.applymap(apply_custom_blues)
+    styled_df = styled_df.map(apply_custom_blues)
 
     # Find the row and column with the highest value
     max_value = df.max().max()
@@ -52,8 +52,8 @@ def demo_df_html():
     min_col = df.columns[min_location[1][0]]
 
     # apply highlights in df
-    styled_df.applymap(lambda x: 'border: 5px solid red', subset=pd.IndexSlice[max_row, max_col])
-    styled_df.applymap(lambda x: 'border: 5px solid green', subset=pd.IndexSlice[min_row, min_col])
+    styled_df.map(lambda x: 'border: 5px solid red', subset=pd.IndexSlice[max_row, max_col])
+    styled_df.map(lambda x: 'border: 5px solid green', subset=pd.IndexSlice[min_row, min_col])
 
     return styled_df.to_html()
 
