@@ -84,8 +84,7 @@ def demo():
                         '- ie. styled_df = df.style.background_gradient(cmap=\'Blues\') and html = styled_df.to_html()']},
                 'updates': {
                     'title': 'Super speed updates!',
-                    'highlights': [
-                        '- A key advantage of this presentation form may be that updates only require the <i>press of a button</i>'],
+                    'highlights': ['- A key advantage of this presentation form may be that updates only require the <i>press of a button</i>'],
                     'body': 'Very often data, analysis conlusions and other content is revised in getting to a final version of a presentation. Since all is Python code, updates of the presentation only require the press of a ▶ Run button.',
                     'footer': [
                         '- and pagination will automatically adjust if new content is inserted']
@@ -121,7 +120,7 @@ def demo():
                 'subcats': {'Advantages over Powerpoint': 'Features that beat Microsoft Powerpoint',
                             'Getting Started': 'Kickstart your project'}}
 
-    custom_css = '.footer_image {width:200px;}'
+    custom_css = '#footer_image {opacity: 0.5;}'
 
     create(content=content
            , title_page=title_page
@@ -134,6 +133,7 @@ def demo():
            , show_highlights_page=True
            , show_highlights_only=False
            , footer_image_url='https://datadept.nl/img/datadept_logo_black.png'
+           , embed_images=False
            , custom_css=custom_css
            , tooltips=tooltips)
 

@@ -15,6 +15,7 @@ code {
     display: block;
     font-size:1.1em;
     padding:15px;
+    white-space: pre-wrap;
 }
 
 .container {
@@ -54,7 +55,7 @@ code {
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 60;
+    font-size: 60px;
     color: #ededed;
 }
 
@@ -81,16 +82,32 @@ code {
      border-radius:5px;
 }
 
+.page_title {
+    line-height: 3em;
+ }
+
 .page_nav {
     width: 100%;
     margin: 0 auto;
     text-align:right;
+    font-size:1em;
+}
+
+/* Mobile devices */
+@media (max-width: 800px) {
+    .page_nav {font-size: 2em;}
+    .page_title {line-height: 3em;}
 }
 
 .page_highlights {
     background-color: #EBEBEB;
     line-height: 1.6;
     padding:10px;
+}
+
+.page_body {
+    padding:3%;
+    line-height:1.5em;
 }
 
 .page_footer {
@@ -105,6 +122,20 @@ code {
     justify-content: space-between;
     align-items: center;
 }
+
+.footer_line {
+    width:20%;
+    margin-left:0;
+}
+
+#footer_image {
+    width: 200px;
+    height: auto;
+    max-height: 100px;
+    margin-right: 10px;
+}
+
+
 /* OTHER */
 
 #copy_button {
@@ -113,3 +144,15 @@ code {
     color: white;border-color: #c7c7c7 !important;
     border-radius: 6px;
 }
+
+#hello_world_code {
+    font-size:1.1em;
+    padding:15px;
+    background-color:#fdffc7;
+    display: block;
+    line-height:1.2em !important;
+ }
+
+ table {
+    font-size:1em;
+ }

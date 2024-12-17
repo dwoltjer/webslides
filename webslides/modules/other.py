@@ -26,7 +26,7 @@ def hello_world_html():
         code_lines = f.readlines()
 
     html_lines = [
-        '<div style="font-size:1.1em;padding:15px;background-color:#fdffc7; display: block;line-height:1.2em !important;"><pre><code style="white-space: pre-wrap;">']
+        '<div id="hello_world_code"><pre><code>']
     for line in code_lines:
         line = line.replace('import sys', '')
         line = line.replace('import os', '')

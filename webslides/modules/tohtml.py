@@ -144,11 +144,12 @@ def title_to_html(pageid='', topcat='', subcat='', title='', show_topcat=True, s
     tooltip_topcat = tooltips_topcat.get(topcat, topcat)
     tooltip_subcat = tooltips_subcat.get(subcat, subcat)
 
-    topcat = f"<span class='topcat' style='color: white; background-color: #008AC9; padding:5px;' title='{tooltip_topcat}'>{topcat.upper()}</span> " if len(
+    topcat = f'<span class="topcat" title="{tooltip_topcat}">{topcat.upper()}</span> ' if len(
         topcat) > 0 else ''
-    subcat = f"<span class='subcat' style='font-weight: normal;' title='{tooltip_subcat}'>{subcat}</span>: " if len(
+    subcat = f"<span class='subcat' title='{tooltip_subcat}'>{subcat}</span>: " if len(
         subcat) > 0 else ''
-    return f"<h3 class='page_title' style='line-height: 2;'>{show_topcat * topcat}{show_subcat * subcat}<span title='{pageid}'>{title}</span></h3>"
+
+    return f"<h3 class='page_title'>{show_topcat * topcat}{show_subcat * subcat}<span title='{pageid}'>{title}</span></h3>"
 
 
 def highlights_to_html(highlights):
@@ -168,14 +169,14 @@ def body_to_html(body):
     # insert html string
     if isinstance(body, str):
         # add some padding to the body content
-        return f'<div class="page_body" style="padding:3%; line-height:1.5em;">{body}</div>'
+        return f'<div class="page_body">{body}</div>'
 
     # if not string, must be plotly fig object
     else:
         return f'''
         
             <!-- page body -->
-            <div class="page_body" style="padding:3%">{po.plot(body, include_plotlyjs=False, output_type="div")}</div>'''
+            <div class="page_body">{po.plot(body, include_plotlyjs=False, output_type="div")}</div>'''
 
 
 def footer_to_html(footer, footer_image_src=None):
@@ -196,7 +197,7 @@ def footer_to_html(footer, footer_image_src=None):
 
     # horizontal line
     if footer:
-        html += '''    <hr style="width:20%; margin-left:0;">'''
+        html += '''    <hr class="footer_line">'''
 
     for o in footer:
         html += f"{o}<br>"
@@ -208,7 +209,7 @@ def footer_to_html(footer, footer_image_src=None):
     if footer_image_src:
         html += f'''
         <!-- footer image -->
-        <div><img src="{footer_image_src}" class="footer_image" alt="footer_image" style="height: auto; max-height: 100px; margin-right: 10px;"></div>
+        <div><img src="{footer_image_src}" id="footer_image" alt="footer_image"></div>
         '''
 
     # close footer div
