@@ -18,8 +18,9 @@ def demo_plotly_fig():
 def demo_folium_html():
     fname = 'folium_demo.html'
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    fpath = os.path.join(current_dir, fname)
-    with open(fpath, 'r') as f:
+    static_dir = os.path.join(os.path.dirname(current_dir), 'static', 'demodata')
+    fpath = os.path.join(static_dir, fname)
+    with open(fpath, 'r', encoding="utf-8") as f:
         demo_html = f.read()
     return demo_html
 
@@ -27,7 +28,8 @@ def demo_folium_html():
 def demo_df_html():
     fname = 'df_demo.html'
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    fpath = os.path.join(current_dir, fname)
+    static_dir = os.path.join(os.path.dirname(current_dir), 'static', 'demodata')
+    fpath = os.path.join(static_dir, fname)
     with open(fpath, 'r') as f:
         df_html = f.read()
     return df_html
@@ -37,7 +39,7 @@ def demo():
     """Creates documentation explaining why and how to use this package"""
 
     title_page = {
-        'title_image_url': '',
+        'title_image_url': 'https://datadept.nl/webslides/package.png',
         'title': 'Demo / documentation',
         'summary': {
             'About': 'Webslides is a Python package that creates HTML presentations <b>like this one</b>.<br>It enables easy sharing of Python-generated content such as charts, other visuals and data',
@@ -69,7 +71,8 @@ def demo():
                                 'highlights': ['- For example this map'],
                                 'body': demo_folium_html(),
                                 'footer': [
-                                    '- this map was created with Folium (<a href="https://python-visualization.github.io/folium/">docs</a>)']},
+                                    '- this map was created with Folium (<a href="https://python-visualization.github.io/folium/">docs</a>)',
+                                    '- note full screen button']},
                 'styling_df': {
                     'title': 'Styled Pandas Dataframes',
                     'highlights': [
@@ -118,7 +121,7 @@ def demo():
                 'subcats': {'Advantages over Powerpoint': 'Features that beat Microsoft Powerpoint',
                             'Getting Started': 'Kickstart your project'}}
 
-    custom_css = None
+    custom_css = '.footer_image {width:200px;}'
 
     create(content=content
            , title_page=title_page
@@ -130,6 +133,7 @@ def demo():
            , show_index_page=True
            , show_highlights_page=True
            , show_highlights_only=False
+           , footer_image_url='https://datadept.nl/img/datadept_logo_black.png'
            , custom_css=custom_css
            , tooltips=tooltips)
 

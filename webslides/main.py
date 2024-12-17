@@ -121,14 +121,16 @@ def create(content=None
     #################
 
     # page shadow css options: https://getcssscan.com/css-box-shadow-examples
+    # CSS-bestand inlezen
+    with open("webslides/static/css/style.css", "r") as f:
+        style_css = f.read()
+
     html = """
     <html>
     <head><meta charset="utf-8" />
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        .page {padding:50px; margin:100px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; background-color: white; border-radius:5px;}
-        body {font-family: Verdana, Geneva, Arial, sans-serif; background-color: #EEE;}
-        a {text-decoration: none;}
+    """ + style_css + """
     </style>
     </head>
     <body>

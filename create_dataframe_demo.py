@@ -59,6 +59,6 @@ def demo_df_html():
 
 
 folium_html = demo_df_html()
-with open(r'webslides/modules/df_demo.html', 'w') as f:
+with open(r'webslides/static/demodata/df_demo.html', 'w') as f:
     f.write(folium_html)
 print('df_demo.html saved to file')

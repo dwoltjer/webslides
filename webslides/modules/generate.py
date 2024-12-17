@@ -84,7 +84,7 @@ def generate_highlights_page(df, show_topcat, show_subcat, tooltips):
         if 'topcat' in df.columns and show_topcat and topcat_has_hl:
             if r['topcat'] != r['next_tcat']:
                 tooltip = tooltips_topcat.get(r['topcat'], '') if tooltips_topcat else r['topcat']
-                hl_page_content += f'<br><span class="topcat" title="{tooltip}" style="color: white; background-color: #008AC9; padding:5px;">{r["topcat"].upper()}</span><br><br>'
+                hl_page_content += f'<br><span class="topcat" title="{tooltip}">{r["topcat"].upper()}</span><br><br>'
 
         # invoegen sub category label
         if 'subcat' in df.columns and show_subcat and subcat_has_hl:

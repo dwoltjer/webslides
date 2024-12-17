@@ -1,6 +1,6 @@
 import pandas as pd
 import folium
-
+from folium.plugins import Fullscreen, Geocoder
 
 def demo_folium_map():
 
@@ -42,11 +42,12 @@ def demo_folium_map():
     # add a layer control with a legend that is always visible
     folium.LayerControl(position='topleft', collapsed=False).add_to(netherlands_map)
 
-    # display the map
-    # display(HTML(netherlands_map._repr_html_()))
+    # Voeg de Fullscreen plugin toe
+    Fullscreen().add_to(netherlands_map)
+
     return netherlands_map._repr_html_()
 
 folium_html = demo_folium_map()
-with open(r'webslides/modules/folium_demo.html', 'w') as f:
+with open(r'webslides/static/demodata/folium_demo.html', 'w') as f:
     f.write(folium_html)
 print('folium_demo.html saved to file')

@@ -6,24 +6,12 @@ def titlepage_to_html(html, page):
     # Generate the HTML
     title_imgage_src = page['title_image_src']
     if title_imgage_src:
-        VAR_TITLE_IMAGE_HTML = f"<img id='title_page_image' src='{title_imgage_src}' style='width:300px; margin:50px 25px 25px 25px;'>"
+        VAR_TITLE_IMAGE_HTML = f"<img id='title_page_image' src='{title_imgage_src}'>"
     else:
         VAR_TITLE_IMAGE_HTML = ws_logo_html()
 
     # init
-    titlepage = """<style>
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-        .centered-element {
-            text-align: center;
-            margin: 20px;
-            width: 80%;
-        }
-    </style>
+    titlepage = """
     <div class='container'>
         <div class='centered-element'>
             VAR_TITLE_IMAGE_HTML
@@ -40,7 +28,7 @@ def titlepage_to_html(html, page):
     summary_html = """
         
         <!-- summary table -->
-            <table style="width: 100%; text-align: left; font-size: 1em; border-collapse: collapse; border: 0;">
+            <table id="summary_table">
                 <colgroup>
                     <col style="width: 20%;">
                     <col style="width: 80%;">
@@ -139,7 +127,7 @@ def pagenavi_to_html(pageno, show_index_page, pageid, show_highlights_page, page
     pagenavi_index_page = f'<a id="{pagekey}" title="Table of contents" href="#id_contents">&#128196;</a> ' * show_index_page
     pagenavi_highlights_page = f'{link_prev} <a title="Highlights summary" href="#highlights">&#128161;</a> {link_next} ' * show_highlights_page
 
-    pagenavi_html = f'<div class="page_nav" style="width: 100%; margin: 0 auto; text-align:right;" title="{pageid}">{pagenavi_highlights_page}{pagenavi_index_page}p{pageno}</div>'
+    pagenavi_html = f'<div class="page_nav" title="{pageid}">{pagenavi_highlights_page}{pagenavi_index_page}p{pageno}</div>'
 
     return pagenavi_html
 
@@ -170,7 +158,7 @@ def highlights_to_html(highlights):
     """
     html = '''\n   
             <!-- highlights -->
-           <div class=page_highlights" style="background-color: #EBEBEB; line-height: 1.6; padding:10px;">'''
+           <div class="page_highlights">'''
     for o in highlights: html += f"{o}<br>"
     html += "</div>"
     return html
@@ -200,10 +188,10 @@ def footer_to_html(footer, footer_image_src=None):
     html = '''
         
         <!-- footer -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="footer_container">
     
         <!-- Footer text -->
-        <div class="page_footer" style="background-color: #FFFFFF; line-height: 1.6; padding:10px; width: calc(100% - 120px);">
+        <div class="page_footer">
     '''
 
     # horizontal line
@@ -231,23 +219,6 @@ def footer_to_html(footer, footer_image_src=None):
 
 def ws_logo_html():
     return """
-        <style>
-        .title_page_image {
-            width: 400px;
-            height: 130px;
-            margin: 50px auto;
-            background: linear-gradient(to bottom right, white, #006fff);
-            border: 3px solid #8ca5ff;
-            border-radius: 10px;
-            box-shadow: 2px 2px 5px rgb(0 0 0 / 30%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 60;
-            color: #ededed;
-        }
-        </style>
         <div class="title_page_image">
             <span>Webslides</span>
         </div>

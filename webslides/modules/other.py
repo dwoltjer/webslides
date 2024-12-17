@@ -38,14 +38,14 @@ def hello_world_html():
 
     # add copy button
     html_lines.append(
-        """<br><br><button style="font-size: 1.3em; background-color: #00bb00;color: white;border-color: #c7c7c7 !important; border-radius: 6px;" onclick="navigator.clipboard.writeText(`""" + '\n'.join(
+        """<br><br><button id="copy_button" onclick="navigator.clipboard.writeText(`""" + '\n'.join(
             html_lines[1:-1]) + """`);alert('Code copied to clipboard');"><b>COPY CODE</b></button>""")
 
     return '\n'.join(html_lines)
 
 
 def code_to_html(code):
-    return f'<div style="background-color:#fdffc7; display: block;font-size:1.1em;padding:15px;"><pre><code>{code}</code></pre></div>'
+    return f'<div><pre><code>{code}</code></pre></div>'
 
 
 def retrieve_image_src(url, embed_images):

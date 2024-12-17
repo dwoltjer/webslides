@@ -73,7 +73,7 @@ content = {
     }
 }
 
-custom_css = "body {font-family: Arial, sans-serif; background-color: #FFF} .page {border-radius:0px;} #title_page_image {width:400px !important;} .footer_image {width:200px;}"
+custom_css = 'body {font-family: Arial, sans-serif; background-color: #FFF} .page {border-radius:0px;} #title_page_image {width:400px !important;} .footer_image {width:200px;}'
 
 # MAIN
 ws.create(content=content
@@ -86,7 +86,7 @@ ws.create(content=content
           , show_highlights_page=False
           , show_highlights_only=False
           , contents_title='Contents header'
-          , footer_image_url='https://datadept.nl/img/datadept_logo_black.png'
+          , footer_image_url=None
           , embed_images=False
           , custom_css=custom_css
           , tooltips=tooltips)
