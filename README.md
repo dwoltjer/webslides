@@ -9,24 +9,25 @@ Here is a [live demo](https://datadept.nl/webslides/demo.html) of an output of W
 
 Some key advantages of using HTML over PowerPoint include:
 
+- Easy to update by rerun of Python code (!)
 - Pages can be as long (or short) as needed, which is handy for taller diagrams
-- Allows for clickable content, like internal links for page navigation and external links to sources
-- Tooltips can be used
-- Allows interactivity with plotly figures
-- Allows interactivity with other elements, such as folium geographical maps
+- Content scaling by browser zoom level
+- Interactive content (!)
+  - Internal and external hyperlinks
+  - Interactive tooltips
+  - Interactive plotly figures
+  - Interactivity with any other HTML elements, such as folium geographical maps
 - Can be shared by attachment in email
-- Very compact file size
-- **Easy to update by rerun of Python code**
+- Compact file size
 
 ## Potential drawbacks
 
 Let's be honest, potential drawbacks may be:
 
-- Python is required to create presentations
+- Python is required to create and alter presentations
 - Recipients cannot easily alter the presentation
 - No WYSIWYG editing in a graphical user interface
-- No easy conversion to PDF / printable
-- No custom styling (ie. company style)
+- No easy conversion to PDF / print
 
 ## Main Features
 
@@ -43,6 +44,7 @@ Webslides has two dependencies:
 
 - Pandas: a Python package that provides fast, flexible, and expressive data structures for data analysis
 - Plotly: an interactive data visualization library that allows you to create a wide range of charts, graphs, and other visualizations
+- Requests: for retrieving title and footer image
 
 Webslides uses Pandas to process the content that is included in your presentation.
 The Plotly package is used to convert Plotly figure objects to HTML.
@@ -158,6 +160,8 @@ content = {
 - **show_highlights_only** (bool, _optional_, default=False): If set to True, only content pages with highlights will be shown in the index and highlights pages.
 
 - **footer_image_url** (str, _optional_, default=None): Filename or web url of image to be used for logo in footer.
+
+- **embed_images** : (bool, optional, default = True): If True, images will be embedded in the HTML file. Embedding increases file size.
 
 - **contents_title** : (str, optional, default = 'Contents'): Heading of the contents page.
 

@@ -3,7 +3,6 @@ import plotly.offline as po
 
 
 def titlepage_to_html(html, page):
-
     # Generate the HTML
     title_imgage_src = page['title_image_src']
     if title_imgage_src:
@@ -13,8 +12,17 @@ def titlepage_to_html(html, page):
 
     # init
     titlepage = """<style>
-    .container {position: relative; height: 700px;}
-    .centered-element {text-align: center; margin: 20px; width:80%; position: absolute; top: 50%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);}
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .centered-element {
+            text-align: center;
+            margin: 20px;
+            width: 80%;
+        }
     </style>
     <div class='container'>
         <div class='centered-element'>
@@ -30,24 +38,26 @@ def titlepage_to_html(html, page):
 
     # generate summary html
     summary_html = """
-        <table style="width: 100%; text-align: left; font-size: 1em; border-collapse: collapse; border: 0;">
-            <colgroup>
-                <col style="width: 20%;">
-                <col style="width: 80%;">
-            </colgroup>
-            <tbody style=" line-height:1.5em;">"""
+        
+        <!-- summary table -->
+            <table style="width: 100%; text-align: left; font-size: 1em; border-collapse: collapse; border: 0;">
+                <colgroup>
+                    <col style="width: 20%;">
+                    <col style="width: 80%;">
+                </colgroup>
+                <tbody style=" line-height:1.5em;">"""
 
     for k, v in page['summary'].items():
         summary_html += f"""
-                <tr style="border: 0;">
-                    <td style="border: 0; padding: 10px; text-decoration: underline; vertical-align: top; text-align: right;">{k}</td>
-                    <td style="border: 0; padding: 10px;">{v}</td>
-                </tr>
-                """
+                    <tr style="border: 0;">
+                        <td style="border: 0; padding: 10px; text-decoration: underline; vertical-align: top; text-align: right;">{k}</td>
+                        <td style="border: 0; padding: 10px;">{v}</td>
+                    </tr>
+                    """
+
     summary_html += """
-                <!-- more rows here -->
-            </tbody>
-        </table>"""
+                </tbody>
+            </table>"""
 
     titlepage = titlepage.replace('VAR_SUMMARY', summary_html)
 
@@ -158,7 +168,9 @@ def highlights_to_html(highlights):
     :param comments: list with text to show in header
     :return: string html formatted header
     """
-    html = '<div class=page_hhighlights" style="background-color: #EBEBEB; line-height: 1.6; padding:10px;">'
+    html = '''\n   
+            <!-- highlights -->
+           <div class=page_highlights" style="background-color: #EBEBEB; line-height: 1.6; padding:10px;">'''
     for o in highlights: html += f"{o}<br>"
     html += "</div>"
     return html
@@ -168,22 +180,14 @@ def body_to_html(body):
     # insert html string
     if isinstance(body, str):
         # add some padding to the body content
-        return f'<div class="page_body" style="padding:3%">{body}</div>'
+        return f'<div class="page_body" style="padding:3%; line-height:1.5em;">{body}</div>'
 
     # if not string, must be plotly fig object
     else:
-        return f'<div class="page_body" style="padding:3%">{po.plot(body, include_plotlyjs=False, output_type="div")}</div>'
-
-
-# def footer_to_html(footer):
-#     """
-#     :param footer: list with text to show in footer
-#     :return: string html formatted footer
-#     """
-#     html = '<div class="page_footer" style="background-color: #FFFFFF; line-height: 1.6; padding:10px;"><HR style="width:20%; margin-left:0;">'
-#     for o in footer: html += f"{o}<br>"
-#     html += "</div>"
-#     return html
+        return f'''
+        
+            <!-- page body -->
+            <div class="page_body" style="padding:3%">{po.plot(body, include_plotlyjs=False, output_type="div")}</div>'''
 
 
 def footer_to_html(footer, footer_image_src=None):
@@ -194,28 +198,29 @@ def footer_to_html(footer, footer_image_src=None):
     """
 
     html = '''
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-    <!-- Footer content -->
-    <div class="page_footer" style="background-color: #FFFFFF; line-height: 1.6; padding:10px; width: calc(100% - 120px);">
+        
+        <!-- footer -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+    
+        <!-- Footer text -->
+        <div class="page_footer" style="background-color: #FFFFFF; line-height: 1.6; padding:10px; width: calc(100% - 120px);">
     '''
 
     # horizontal line
     if footer:
-        html += '''<hr style="width:20%; margin-left:0;">'''
+        html += '''    <hr style="width:20%; margin-left:0;">'''
 
     for o in footer:
         html += f"{o}<br>"
 
     # close footer text div
-    html += "</div>"
+    html += "</div>\n"
 
     # image div
     if footer_image_src:
         html += f'''
-            <div>
-                <!-- Image on the far right -->
-                <img src="{footer_image_src}" class="footer_image" alt="footer_image" style="height: auto; max-height: 100px; margin-right: 10px;">
-            </div>
+        <!-- footer image -->
+        <div><img src="{footer_image_src}" class="footer_image" alt="footer_image" style="height: auto; max-height: 100px; margin-right: 10px;"></div>
         '''
 
     # close footer div
@@ -227,10 +232,10 @@ def footer_to_html(footer, footer_image_src=None):
 def ws_logo_html():
     return """
         <style>
-        .title_logo {
+        .title_page_image {
             width: 400px;
             height: 130px;
-            margin: 42px auto;
+            margin: 50px auto;
             background: linear-gradient(to bottom right, white, #006fff);
             border: 3px solid #8ca5ff;
             border-radius: 10px;

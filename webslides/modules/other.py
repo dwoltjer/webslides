@@ -26,7 +26,7 @@ def hello_world_html():
         code_lines = f.readlines()
 
     html_lines = [
-        '<div style="font-size:1.1em;padding:15px;background-color:#fdffc7; display: inline-block;"><pre><code>']
+        '<div style="font-size:1.1em;padding:15px;background-color:#fdffc7; display: block;line-height:1.2em !important;"><pre><code style="white-space: pre-wrap;">']
     for line in code_lines:
         line = line.replace('import sys', '')
         line = line.replace('import os', '')
@@ -45,53 +45,68 @@ def hello_world_html():
 
 
 def code_to_html(code):
-    # return f'<div style="font-family: Courier New; font-weight: normal; background-color:#fdffc7; display: inline-block; padding:15px;">{code}</div>'
-    return f'<div style="background-color:#fdffc7; display: inline-block;font-size:1.1em;padding:15px;"><pre><code>{code}</code></pre></div>'
+    return f'<div style="background-color:#fdffc7; display: block;font-size:1.1em;padding:15px;"><pre><code>{code}</code></pre></div>'
 
 
-def retrieve_image_src(url):
+def retrieve_image_src(url, embed_images):
     """
     param url: str filepath or web url
     return: str with src data to embed in html page
     """
 
-    # default image
-    IMAGE_SRC = None
 
-    # check if image is provided, otherwise swap for Webslides logo HTML
-    if url and len(url) > 0:
+    # don't embed images
+    if not embed_images and url is not None and 'http' in url:
 
-        if 'http' in url:
+        # test if provided url is valid
+        # Download the image using requests
+        response = requests.get(url)
+        if response.status_code == 200:  # Check if the download was successful
+            return url
+        else:
+            print(f'Image {url} not found, using default')
+            return None
 
-            # Download the image using requests
-            response = requests.get(url)
-            if response.status_code == 200:  # Check if the download was successful
-                # Convert the image to Base64
-                base64_string = base64.b64encode(response.content).decode('utf-8')
+    # embed images
+    else:
+
+        # default image
+        IMAGE_SRC = None
+
+        # check if image is provided, otherwise swap for Webslides logo HTML
+        if url and len(url) > 0:
+
+            if 'http' in url:
+
+                # Download the image using requests
+                response = requests.get(url)
+                if response.status_code == 200:  # Check if the download was successful
+                    # Convert the image to Base64
+                    base64_string = base64.b64encode(response.content).decode('utf-8')
+                    # Create the data:image string
+                    IMAGE_SRC = f"data:image/jpeg;base64,{base64_string}"
+                else:
+                    print(f"WARNING: Error while fetching the image {url}: {response.status_code}, using default")
+
+            # check if local image file exists
+            elif os.path.exists(url):
+
+                # Open het bestand in binaire modus
+                with open(url, 'rb') as file:
+                    file_content = file.read()
+
+                # Encodeer de inhoud naar Base64
+                base64_string = base64.b64encode(file_content).decode('utf-8')
+
                 # Create the data:image string
                 IMAGE_SRC = f"data:image/jpeg;base64,{base64_string}"
+
+            # image not found, using default
             else:
-                print(f"WARNING: Error while fetching the image {url}: {response.status_code}, using default")
+                print(f"WARNING: image {url} not found, using default")
 
-        # check if local image file exists
-        elif os.path.exists(url):
-
-            # Open het bestand in binaire modus
-            with open(url, 'rb') as file:
-                file_content = file.read()
-
-            # Encodeer de inhoud naar Base64
-            base64_string = base64.b64encode(file_content).decode('utf-8')
-
-            # Create the data:image string
-            IMAGE_SRC = f"data:image/jpeg;base64,{base64_string}"
-
-        # image not found, using default
+        # no image url provided, load default webslides logo
         else:
-            print(f"WARNING: image {url} not found, using default")
+            print(f'INFO: image {url} not found, using default')
 
-    # no image url provided, load default webslides logo
-    else:
-        print(f'INFO: image {url} not found, using default')
-
-    return IMAGE_SRC
+        return IMAGE_SRC

@@ -83,7 +83,7 @@ def demo():
                     'title': 'Super speed updates!',
                     'highlights': [
                         '- A key advantage of this presentation form may be that updates only require the <i>press of a button</i>'],
-                    'body': 'Very often data, analysis conlusions and other content is revised in getting to a final version of a presentation. Since all is in python script, updates of the presentation only requires the press of the ▶ Run button.',
+                    'body': 'Very often data, analysis conlusions and other content is revised in getting to a final version of a presentation. Since all is Python code, updates of the presentation only require the press of a ▶ Run button.',
                     'footer': [
                         '- and pagination will automatically adjust if new content is inserted']
                 }
@@ -105,7 +105,7 @@ def demo():
                                  '- html output file, in this case \'demo.html\', is always saved to a directory \'wsout\'']},
                 'hello_world': {'title': 'Hello World',
                                 'highlights': [
-                                    '- basic example, demonstrating most of the available parameters',
+                                    '- basic example, demonstrating most of the available features',
                                     '- for a complete list of features visit <a href="https://pypi.org/project/webslides/">Pypi</a>'],
                                 'body': hello_world_html(),
                                 'footer': [
@@ -122,7 +122,7 @@ def demo():
 
     create(content=content
            , title_page=title_page
-           , fname='demo_documention.html'
+           , fname='demo.html'
            , show_topcat=True
            , show_subcat=True
            , open_in_browser=True

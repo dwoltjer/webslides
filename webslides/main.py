@@ -22,6 +22,7 @@ def create(content=None
            , contents_title=None
            , custom_css=None
            , footer_image_url=None
+           , embed_images=True
            , tooltips=dict()):
     """
     Create an interactive presentation using the WebSlides framework.
@@ -80,6 +81,9 @@ def create(content=None
     contents_title : str, optional
         Heading of the contents page, default = 'Contents'
 
+    embed_images : bool, optional
+        If True, images will be embedded in the HTML file. Embedding increases file size. default = True
+
     tooltips : dict, optional
         A dictionary of tooltips to enhance interactivity in the slides. Keys are element identifiers, and values are tooltip text.
 
@@ -122,14 +126,10 @@ def create(content=None
     <head><meta charset="utf-8" />
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-    .page 
-        {padding:50px; margin:100px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; background-color: white; border-radius:5px;}
-    body 
-        {font-family: Verdana, Geneva, Arial, sans-serif; background-color: #EEE;}
-    a 
-        {text-decoration: none;}
-
-    </style>    
+        .page {padding:50px; margin:100px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; background-color: white; border-radius:5px;}
+        body {font-family: Verdana, Geneva, Arial, sans-serif; background-color: #EEE;}
+        a {text-decoration: none;}
+    </style>
     </head>
     <body>
     <span></span>
@@ -138,8 +138,8 @@ def create(content=None
     """
 
     # get image source code from url
-    title_image_src = retrieve_image_src(title_page.get('title_image_url'))
-    footer_image_src = retrieve_image_src(footer_image_url)
+    title_image_src = retrieve_image_src(title_page.get('title_image_url'), embed_images)
+    footer_image_src = retrieve_image_src(footer_image_url, embed_images)
 
     # 1. title page
     if title_page and show_title_page:
@@ -150,7 +150,10 @@ def create(content=None
                 'footer': title_page.get('footer', list())}
 
         # start new page
-        html = html.replace('<span></span>', '<div class="page"><span></span></div>')
+        html = html.replace('<span></span>', '''
+        <!-- TITLE PAGE -->
+        <div class="page"><span></span></div>
+        ''')
 
         # reuse contenpage_to_html function (normally used for content slides)
         html = titlepage_to_html(html, page)
@@ -161,7 +164,11 @@ def create(content=None
     # 2. index page
     if show_index_page:
         # start new page
-        html = html.replace('<span></span>', '<div class="page"><span></span></div>')
+        html = html.replace('<span></span>', '''
+        
+            <!-- INDEX PAGE -->
+            <div class="page"><span></span></div>
+            ''')
         indexpage_html = generate_index_page(df, show_topcat=show_topcat,
                                              show_subcat=show_subcat, tooltips=tooltips,
                                              contents_title=contents_title)
@@ -173,7 +180,11 @@ def create(content=None
     # 3. highlights page
     if show_highlights_page:
         # start new page
-        html = html.replace('<span></span>', '<div class="page"><span></span></div>')
+        html = html.replace('<span></span>', '''
+        
+                    <!-- HIGHLIGHTS PAGE -->
+            <div class="page"><span></span></div>
+            ''')
 
         hlpage_html = generate_highlights_page(df, show_topcat=show_topcat, show_subcat=show_subcat, tooltips=tooltips)
         html = html.replace('<span></span>', hlpage_html + '<span></span>')
@@ -184,7 +195,11 @@ def create(content=None
     # 4. content pages
     for idx, page in df.iterrows():
         # start new page
-        html = html.replace('<span></span>', '<div class="page"><span></span></div>')
+        html = html.replace('<span></span>', '''
+        
+            <!-- CONTENT PAGE -->
+            <div class="page"><span></span></div>
+            ''')
 
         # insert content html
         html = content_to_html(html, page,
@@ -205,7 +220,7 @@ def create(content=None
         style_tag = f"<style>{custom_css}</style>"
 
         # instert style tag before closing </head> tag
-        html = html.replace("</head>", f"{style_tag}\n</head>")
+        html = html.replace("</head>", f"{style_tag}\n   </head>")
 
 
     ###################

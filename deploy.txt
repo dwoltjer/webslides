@@ -1,18 +1,18 @@
 # create package  -- TERMINAL
-cd C:\Users\derk-jan.woltjer\PycharmProjects\webslides
+cd C:\Users\edest\PycharmProjects\webslides
 python setup.py sdist
 
 
 
 REM install package -- CMD!
 cd c:\Python310\Scripts
-pip install C:\Users\derk-jan.woltjer\PycharmProjects\webslides\dist\webslides-0.7.0.tar.gz
+pip install C:\Users\edest\PycharmProjects\webslides\dist\webslides-0.7.1.tar.gz
 cd c:\Python310\Lib\site-packages\webslides
 
 
 
 # upload to PyPI  -- TERMINAL
-cd C:\Users\derk-jan.woltjer\PycharmProjects\webslides
+cd C:\Users\edest\PycharmProjects\webslides
 twine upload dist/*
 
 

@@ -26,7 +26,7 @@ title_page = {
     'title': 'Hello World!<br>Title of Title Page',
     'title_image_url': 'https://datadept.nl/webslides/package.png',
     'summary': {'Summary item 1': 'This presentation demonstrates some of the features of webslides and could be used as a starting point for a new presentation', 'Summary item 2': 'item text 2'},
-    'footer': ['- use custom title image via the title_image_url parameter', '- footer2']
+    'footer': ['- configure title page image via the title_image_url parameter', '- configure custom footer image via the footer_image_url parameter']
 }
 
 # tooltips (optional!)
@@ -73,7 +73,7 @@ content = {
     }
 }
 
-custom_css = "body {font-family: Arial, sans-serif; background-color: #FFF} .page {border-radius:0px;} .footer_image {width:200px;}"
+custom_css = "body {font-family: Arial, sans-serif; background-color: #FFF} .page {border-radius:0px;} #title_page_image {width:400px !important;} .footer_image {width:200px;}"
 
 # MAIN
 ws.create(content=content
@@ -85,7 +85,8 @@ ws.create(content=content
           , show_subcat=True
           , show_highlights_page=False
           , show_highlights_only=False
-          , contents_title='Inhoudsopgave'
+          , contents_title='Contents header'
           , footer_image_url='https://datadept.nl/img/datadept_logo_black.png'
+          , embed_images=False
           , custom_css=custom_css
           , tooltips=tooltips)
