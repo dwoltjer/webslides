@@ -3,12 +3,14 @@ cd C:\Users\edest\PycharmProjects\webslides
 python setup.py sdist
 
 
-
 REM install package -- CMD!
 cd c:\Python310\Scripts
-pip install C:\Users\edest\PycharmProjects\webslides\dist\webslides-0.7.2.tar.gz
+pip install C:\Users\edest\PycharmProjects\webslides\dist\webslides-0.7.3.tar.gz
 cd c:\Python310\Lib\site-packages\webslides
 
+
+REM OPTIONAL: TEST LOCAL -- Notebook
+pip install C:\Users\edest\PycharmProjects\webslides\dist\webslides-0.7.3.tar.gz
 
 
 # upload to PyPI  -- TERMINAL

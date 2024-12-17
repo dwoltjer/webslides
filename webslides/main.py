@@ -121,8 +121,13 @@ def create(content=None
     #################
 
     # page shadow css options: https://getcssscan.com/css-box-shadow-examples
-    # CSS-bestand inlezen
-    with open("webslides/static/css/style.css", "r") as f:
+
+    # Dynamically calculate the path to the CSS file
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    css_path = os.path.join(current_dir, "static", "css", "style.css")
+
+    # Read the CSS file
+    with open(css_path, "r") as f:
         style_css = f.read()
 
     html = """
