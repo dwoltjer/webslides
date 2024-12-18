@@ -16,6 +16,7 @@ code {
     font-size:1.1em;
     padding:15px;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 .container {
